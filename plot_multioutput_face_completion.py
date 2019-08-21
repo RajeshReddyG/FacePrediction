@@ -13,36 +13,85 @@ regression and ridge regression complete the lower half of those faces.
 """
 print(__doc__)
 
-import numpy as np
+# Required Imports
 import matplotlib.pyplot as plt
-
+import numpy as np
+from PIL import Image
 from sklearn.datasets import fetch_olivetti_faces
-from sklearn.utils.validation import check_random_state
-
 from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.neighbors import KNeighborsRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import RidgeCV
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.utils.validation import check_random_state
+
+
+# Function to load Image
+def load_image(path):
+    img = Image.open(path)
+    img.load()
+    ImgData = np.asarray(img, dtype="int32")
+    # print(len(ImgData))
+    return ImgData
+
 
 # Load the faces datasets
 data = fetch_olivetti_faces()
 targets = data.target
 
+######## Debugging Purpose
+print(data.images)
+print(type(data.images))
+ex = load_image("Imgs/Im1.jpg")  # HardCoded Image Path - Change Image Path to predict
+exa = []
+exa.append(ex)
+exanp = np.array(exa)
+print(exanp)
+print(type((exanp)))
+########
+
 data = data.images.reshape((len(data.images), -1))
+
+######## Debugging Purpose
+exanp = exanp.reshape((len(exanp), -1))
+print(data)
+print(len(data))
+print(exanp)
+print(len(exanp))
+########
+
 train = data[targets < 30]
 test = data[targets >= 30]  # Test on independent people
 
+################ Debugging Purpose
+print(test)
+print(len(test))
+test = exanp
+################
+
 # Test on a subset of people
-n_faces = 5
+n_faces = 1
 rng = check_random_state(4)
-face_ids = rng.randint(test.shape[0], size=(n_faces, ))
+face_ids = rng.randint(test.shape[0], size=(n_faces,))
 test = test[face_ids, :]
+
+'''###
+# test=load_image().reshape((400, -1))
+print(test)
+print(len(test[0]))
+###'''
 
 n_pixels = data.shape[1]
 X_train = train[:, :int(np.ceil(0.5 * n_pixels))]  # Upper half of the faces
 y_train = train[:, int(np.floor(0.5 * n_pixels)):]  # Lower half of the faces
 X_test = test[:, :int(np.ceil(0.5 * n_pixels))]
 y_test = test[:, int(np.floor(0.5 * n_pixels)):]
+
+'''###
+print(X_test)
+print(y_test)
+print(len(X_test[0]))
+print(len(y_test[0]))
+###'''
 
 # Fit estimators
 ESTIMATORS = {
@@ -74,7 +123,6 @@ for i in range(n_faces):
         sub = plt.subplot(n_faces, n_cols, i * n_cols + 1,
                           title="true faces")
 
-
     sub.axis("off")
     sub.imshow(true_face.reshape(image_shape),
                cmap=plt.cm.gray,
@@ -95,4 +143,5 @@ for i in range(n_faces):
                    cmap=plt.cm.gray,
                    interpolation="nearest")
 
+print('Plot Here ')
 plt.show()
