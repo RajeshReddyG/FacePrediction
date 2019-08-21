@@ -2,3 +2,4 @@
 **/Imgs/Im4.png
 **/__pycache__
 *.pyc
+.idea
