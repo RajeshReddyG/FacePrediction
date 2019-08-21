@@ -1,6 +1,6 @@
 **/Imgs/Im3.png
 **/Imgs/Im4.png
 **/__pycache__
-*.pyc
+.pyc
 *.idea
 .idea/*
